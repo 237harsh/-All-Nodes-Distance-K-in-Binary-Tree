@@ -1,0 +1,75 @@
+class Solution {
+public:
+    void make(TreeNode* root, unordered_map<TreeNode*,TreeNode*>&pt)
+  {
+      queue<TreeNode*>q;
+      q.push(root);
+      pt[root]=NULL;
+      while(!q.empty())
+      {
+          TreeNode *p=q.front();
+          q.pop();
+          
+          if(p->left)
+          {
+              pt[p->left]=p;
+              q.push(p->left);
+          }
+          if(p->right)
+          {
+              pt[p->right]=p;
+              q.push(p->right);
+          }
+      }
+  }
+
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        vector <int>an;
+         unordered_map<TreeNode*,TreeNode*>pt;
+         make(root,pt);
+         unordered_map<TreeNode*,bool>vis;
+         queue<TreeNode*>q;
+         int l=0;
+         q.push(target);
+         vis[target]=true;
+         while(!q.empty())
+         {
+             int n=q.size();
+             
+             if(l==k)
+             {
+                 break;
+             }
+             for(int i=1;i<=n;i++)
+             {
+                 TreeNode *p=q.front();
+                 q.pop();
+                 if(p->left&&!vis[p->left])
+                 {
+                    vis[p->left]=true;
+                    q.push(p->left);
+                 }
+                  if(p->right&&!vis[p->right])
+                 {
+                    vis[p->right]=true;
+                    q.push(p->right);
+                 }
+                 if(pt[p]&&!vis[pt[p]])
+                 {
+                     vis[pt[p]]=true;
+                     q.push(pt[p]);
+                 }
+             }
+             l++;
+         }
+         while(!q.empty())
+         {
+             an.push_back(q.front()->val);
+             q.pop();
+         }
+        // sort(an.begin(),an.end());
+         return an;
+    }
+};
+
+https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
